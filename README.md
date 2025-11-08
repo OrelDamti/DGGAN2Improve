@@ -31,15 +31,19 @@ Link Reconstruction Performance
 <img width="1150" height="765" alt="image" src="https://github.com/user-attachments/assets/a219f64d-9f66-4529-88c8-963e6a367960" />
 
 Hits@1
+
 <img width="623" height="157" alt="image" src="https://github.com/user-attachments/assets/c49eb25c-6554-44e3-b4a7-6831f9b62398" />
 
 Hits@100
+
 <img width="623" height="157" alt="image" src="https://github.com/user-attachments/assets/b692e493-593f-4191-8798-72bb254d7790" />
 
 Mean Reciprocal Rank (MRR)
+
 <img width="623" height="157" alt="image" src="https://github.com/user-attachments/assets/e0db31db-f466-4e1b-8685-8313a6e89c47" />
 
 Precision@100
+
 <img width="623" height="157" alt="image" src="https://github.com/user-attachments/assets/0bb4a6e8-29de-451f-90b2-577240a50eae" />
 
 Metric Distribution and Analysis
