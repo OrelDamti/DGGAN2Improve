@@ -9,9 +9,10 @@ https://arxiv.org/abs/2008.03667
 
 ## Requirements
 
-- tensorflow
-- numpy
-- scikit-learn
+- TensorFlow
+- NumPy
+- Scikit-learn
+- Matplotlib
 
 
 ## Usage
