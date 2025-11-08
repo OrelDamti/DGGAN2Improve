@@ -39,7 +39,7 @@ Hits@100
 Mean Reciprocal Rank (MRR)
 <img width="623" height="157" alt="image" src="https://github.com/user-attachments/assets/e0db31db-f466-4e1b-8685-8313a6e89c47" />
 
-Precision@100  
+Precision@100
 <img width="623" height="157" alt="image" src="https://github.com/user-attachments/assets/0bb4a6e8-29de-451f-90b2-577240a50eae" />
 
 Metric Distribution and Analysis
