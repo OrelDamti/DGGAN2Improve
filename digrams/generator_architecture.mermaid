@@ -1,0 +1,33 @@
+graph TB
+    G1[Generator Input:<br/>node_ids, noise_embedding,<br/>dis_node_embedding] --> G2[Lookup Gen Node Embedding]
+    G2 --> G3[Split for 2 Directions:<br/>Source & Target]
+    G3 --> G4[Direction 0: Source Generator Gs]
+    G3 --> G5[Direction 1: Target Generator Gt]
+    G4 --> G6[Add Noise to Embedding]
+    G5 --> G7[Add Noise to Embedding]
+    G6 --> G8[MLP Layer 1:<br/>W1, b1 + LeakyReLU]
+    G7 --> G9[MLP Layer 1:<br/>W1, b1 + LeakyReLU]
+    G8 --> G10[Fake Source Embedding]
+    G9 --> G11[Fake Target Embedding]
+    G10 --> G12[Calculate Score with<br/>Dis Source Embedding]
+    G11 --> G13[Calculate Score with<br/>Dis Target Embedding]
+    G12 --> G14[Gen Loss with<br/>Label Smoothing + L2 Reg]
+    G13 --> G14
+    G14 --> G15[Total Gen Loss]
+    
+    %% Styling with darker backgrounds and black text
+    style G1 fill:#e0e0e0,stroke:#333,stroke-width:2px,color:#000
+    style G2 fill:#e57373,stroke:#333,stroke-width:2px,color:#000
+    style G3 fill:#e57373,stroke:#333,stroke-width:2px,color:#000
+    style G4 fill:#f06292,stroke:#333,stroke-width:2px,color:#000
+    style G5 fill:#f06292,stroke:#333,stroke-width:2px,color:#000
+    style G6 fill:#f06292,stroke:#333,stroke-width:2px,color:#000
+    style G7 fill:#f06292,stroke:#333,stroke-width:2px,color:#000
+    style G8 fill:#ba68c8,stroke:#333,stroke-width:2px,color:#000
+    style G9 fill:#ba68c8,stroke:#333,stroke-width:2px,color:#000
+    style G10 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style G11 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style G12 fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style G13 fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style G14 fill:#fff176,stroke:#333,stroke-width:2px,color:#000
+    style G15 fill:#81c784,stroke:#333,stroke-width:2px,color:#000

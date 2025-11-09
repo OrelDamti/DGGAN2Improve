@@ -1,0 +1,23 @@
+graph LR
+    %% Real samples path
+    RealEdges[Real Graph Edges<br/>u → v] --> Sample1[Sample<br/>Positive Pairs]
+    Sample1 --> Discriminator
+    
+    %% Generator path
+    Noise[Noise + Node Embedding<br/>z ~ N0, σ²] --> Generator
+    Generator --> Sample2[Sample<br/>Fake Neighbors]
+    Sample2 --> Discriminator
+    
+    %% Discriminator outputs
+    Discriminator[Discriminator<br/>Source & Target<br/>Embedding Spaces] --> DLoss[Discriminator Loss<br/>Maximize: Real = 1<br/>Minimize: Fake = 0]
+    Discriminator --> GLoss[Generator Loss<br/>Fool Discriminator:<br/>Fake → 1]
+    
+    %% Styling with darker backgrounds and black text
+    style RealEdges fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style Generator fill:#e57373,stroke:#333,stroke-width:2px,color:#000
+    style Discriminator fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style DLoss fill:#fff176,stroke:#333,stroke-width:2px,color:#000
+    style GLoss fill:#f06292,stroke:#333,stroke-width:2px,color:#000
+    style Noise fill:#e0e0e0,stroke:#333,stroke-width:2px,color:#000
+    style Sample1 fill:#bdbdbd,stroke:#333,stroke-width:2px,color:#000
+    style Sample2 fill:#bdbdbd,stroke:#333,stroke-width:2px,color:#000

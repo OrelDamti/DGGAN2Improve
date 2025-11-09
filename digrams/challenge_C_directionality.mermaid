@@ -1,0 +1,49 @@
+graph TB
+    %% Challenge C: Directionality - Asymmetric Relationships
+    
+    Title["Challenge C: Directionality<br/>Asymmetric relationships require separate source & target roles"]
+    
+    subgraph Example["Real-world Example: Twitter"]
+        Fan((Fan<br/>Follows))
+        Celebrity((Celebrity<br/>Followed by))
+        
+        Fan -->|follows| Celebrity
+        Celebrity -.->|does NOT follow| Fan
+        
+        Note1["Fan = SOURCE role<br/>Celebrity = TARGET role"]
+    end
+    
+    subgraph Problem["The Problem"]
+        U((Node U))
+        V((Node V))
+        
+        U -->|directed edge| V
+        V -.->|different meaning| U
+        
+        Question["❓ (U→V) ≠ (V→U)<br/>Same nodes, different semantics"]
+    end
+    
+    subgraph Solution["DGGAN Solution"]
+        Node((Node))
+        Source["Source Embedding<br/>su ∈ ℝd<br/>(outgoing role)"]
+        Target["Target Embedding<br/>tu ∈ ℝd<br/>(incoming role)"]
+        
+        Node -.-> Source
+        Node -.-> Target
+    end
+    
+    %% Styling
+    style Title fill:#e0e0e0,stroke:#333,stroke-width:3px,color:#000
+    style Fan fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style Celebrity fill:#f06292,stroke:#333,stroke-width:2px,color:#000
+    style Note1 fill:#fff176,stroke:#333,stroke-width:2px,color:#000
+    style U fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style V fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style Question fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style Node fill:#ba68c8,stroke:#333,stroke-width:2px,color:#000
+    style Source fill:#e57373,stroke:#333,stroke-width:2px,color:#000
+    style Target fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style Example fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style Problem fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style Solution fill:#fff,stroke:#333,stroke-width:2px,color:#000
+

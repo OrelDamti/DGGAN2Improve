@@ -1,0 +1,68 @@
+graph TB
+    %% Challenge D: Scalability
+    
+    Title["Challenge D: Scalability<br/>Processing large-scale networks efficiently"]
+    
+    subgraph Small["Small Network: Feasible"]
+        S1((1))
+        S2((2))
+        S3((3))
+        S4((4))
+        S5((5))
+        
+        S1 --> S2
+        S1 --> S3
+        S2 --> S4
+        S3 --> S5
+        S4 --> S5
+        
+        SmallStats["5 nodes, 5 edges<br/>✓ Fast training<br/>✓ Low memory"]
+    end
+    
+    subgraph Large["Large Network: Challenge"]
+        L1["Node 1"]
+        L2["Node 2"]
+        Ldots["..."]
+        Ln["Node N"]
+        
+        L1 -.-> L2
+        L1 -.-> Ldots
+        L2 -.-> Ldots
+        Ldots -.-> Ln
+        
+        LargeStats["N = 1M+ nodes<br/>E = 10M+ edges<br/>⚠ Memory: O(d·N + E)<br/>⚠ Time: O(ns·(nD·E + nG·N)·d²)"]
+    end
+    
+    subgraph DGGANSolution["DGGAN Scalability Features"]
+        Batch["Mini-batch Training<br/>Process in chunks"]
+        Linear["Linear Complexity<br/>O(E) per epoch"]
+        Efficient["Efficient Updates<br/>Adam optimizer"]
+        
+        Batch --> Scalable
+        Linear --> Scalable
+        Efficient --> Scalable
+        
+        Scalable["✓ Handles Large Graphs<br/>Twitter: 465K nodes<br/>Google: 171K edges"]
+    end
+    
+    %% Styling
+    style Title fill:#e0e0e0,stroke:#333,stroke-width:3px,color:#000
+    style S1 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style S2 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style S3 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style S4 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style S5 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style SmallStats fill:#c8e6c9,stroke:#333,stroke-width:2px,color:#000
+    style L1 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style L2 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style Ldots fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style Ln fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style LargeStats fill:#ffcdd2,stroke:#333,stroke-width:2px,color:#000
+    style Batch fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style Linear fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style Efficient fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style Scalable fill:#c8e6c9,stroke:#333,stroke-width:2px,color:#000
+    style Small fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style Large fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style DGGANSolution fill:#fff,stroke:#333,stroke-width:2px,color:#000
+

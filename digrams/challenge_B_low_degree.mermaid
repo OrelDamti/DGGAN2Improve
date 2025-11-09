@@ -1,0 +1,43 @@
+graph TB
+    %% Challenge B: Low In/Outdegree Nodes
+    
+    subgraph Problem["Challenge B: Low In/Outdegree Nodes"]
+        direction LR
+        
+        subgraph ZeroIn["Zero Indegree (Leaf Nodes)"]
+            A((A<br/>out=0<br/>in=0))
+            B((B<br/>out=2<br/>in=0))
+            C((C<br/>out=1<br/>in=0))
+            Hub1((Hub))
+            
+            B --> Hub1
+            C --> Hub1
+        end
+        
+        subgraph ZeroOut["Zero Outdegree (Sink Nodes)"]
+            Hub2((Hub))
+            D((D<br/>out=0<br/>in=2))
+            E((E<br/>out=0<br/>in=1))
+            F((F<br/>out=0<br/>in=0))
+            
+            Hub2 --> D
+            Hub2 --> E
+        end
+    end
+    
+    Issue["⚠ Problem: Insufficient training signal<br/>for isolated or one-directional nodes<br/>Cannot learn robust embeddings"]
+    
+    %% Styling
+    style A fill:#e57373,stroke:#333,stroke-width:3px,color:#000
+    style B fill:#ffb74d,stroke:#333,stroke-width:3px,color:#000
+    style C fill:#fff176,stroke:#333,stroke-width:3px,color:#000
+    style Hub1 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style Hub2 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style D fill:#fff176,stroke:#333,stroke-width:3px,color:#000
+    style E fill:#ffb74d,stroke:#333,stroke-width:3px,color:#000
+    style F fill:#e57373,stroke:#333,stroke-width:3px,color:#000
+    style Issue fill:#f06292,stroke:#333,stroke-width:3px,color:#000
+    style Problem fill:#e0e0e0,stroke:#333,stroke-width:2px,color:#000
+    style ZeroIn fill:#fff,stroke:#666,stroke-width:1px,color:#000
+    style ZeroOut fill:#fff,stroke:#666,stroke-width:1px,color:#000
+

@@ -1,0 +1,36 @@
+graph TB
+    D1[Discriminator Input:<br/>pos_node_ids, pos_neighbor_ids,<br/>fake_embeddings] --> D2[Dis Embedding Matrix<br/>2 × n_node × n_emb]
+    D2 --> D3[Split: Source & Target<br/>Embedding Spaces]
+    D3 --> D4[Lookup Real Node Embeddings]
+    D4 --> D5[Calculate Positive Score:<br/>Inner Product]
+    D5 --> D6[Pos Loss:<br/>Sigmoid Cross-Entropy<br/>labels=1]
+    
+    D2 --> D7[Process Fake Embeddings<br/>from Generator]
+    D7 --> D8[Calculate Negative Scores:<br/>4 combinations i,j ∈ 0,1]
+    D8 --> D9[Neg Loss 0: pos_node × fake_source]
+    D8 --> D10[Neg Loss 1: pos_node × fake_target]
+    D8 --> D11[Neg Loss 2: pos_neighbor × fake_source]
+    D8 --> D12[Neg Loss 3: pos_neighbor × fake_target]
+    
+    D6 --> D13[Total Dis Loss]
+    D9 --> D13
+    D10 --> D13
+    D11 --> D13
+    D12 --> D13
+    D13 --> D14[Weighted Sum with<br/>neg_weight coefficients]
+    
+    %% Styling with darker backgrounds and black text
+    style D1 fill:#e0e0e0,stroke:#333,stroke-width:2px,color:#000
+    style D2 fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style D3 fill:#64b5f6,stroke:#333,stroke-width:2px,color:#000
+    style D4 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style D5 fill:#81c784,stroke:#333,stroke-width:2px,color:#000
+    style D6 fill:#fff176,stroke:#333,stroke-width:2px,color:#000
+    style D7 fill:#e57373,stroke:#333,stroke-width:2px,color:#000
+    style D8 fill:#e57373,stroke:#333,stroke-width:2px,color:#000
+    style D9 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style D10 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style D11 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style D12 fill:#ffb74d,stroke:#333,stroke-width:2px,color:#000
+    style D13 fill:#f06292,stroke:#333,stroke-width:2px,color:#000
+    style D14 fill:#ba68c8,stroke:#333,stroke-width:2px,color:#000

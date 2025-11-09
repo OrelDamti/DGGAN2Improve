@@ -1,0 +1,143 @@
+graph TB
+    subgraph "Initialization Phase"
+        A[Start] --> B[Read Directed Graph G = V, E]
+        B --> C[Load Node List & Edges]
+        C --> D{Pretrained Embeddings?}
+        D -->|Yes| E[Load Initial Embeddings]
+        D -->|No| F[Random Initialization]
+        E --> G[Build Generator]
+        F --> G
+        G --> H[Build Discriminator]
+        H --> I[Setup Optimizers<br/>Adam for Gen & Dis]
+        I --> J{Restore Checkpoint?}
+        J -->|Yes| K[Load from Checkpoint]
+        J -->|No| L[Initialize Fresh]
+        K --> M[Ready for Training]
+        L --> M
+    end
+
+    subgraph "Generator Architecture"
+        G1[Generator Input:<br/>node_ids, noise_embedding,<br/>dis_node_embedding] --> G2[Lookup Gen Node Embedding]
+        G2 --> G3[Split for 2 Directions:<br/>Source & Target]
+        G3 --> G4[Direction 0: Source Generator Gs]
+        G3 --> G5[Direction 1: Target Generator Gt]
+        G4 --> G6[Add Noise to Embedding]
+        G5 --> G7[Add Noise to Embedding]
+        G6 --> G8[MLP Layer 1:<br/>W1, b1 + LeakyReLU]
+        G7 --> G9[MLP Layer 1:<br/>W1, b1 + LeakyReLU]
+        G8 --> G10[Fake Source Embedding]
+        G9 --> G11[Fake Target Embedding]
+        G10 --> G12[Calculate Score with<br/>Dis Source Embedding]
+        G11 --> G13[Calculate Score with<br/>Dis Target Embedding]
+        G12 --> G14[Gen Loss with<br/>Label Smoothing + L2 Reg]
+        G13 --> G14
+        G14 --> G15[Total Gen Loss]
+    end
+
+    subgraph "Discriminator Architecture"
+        D1[Discriminator Input:<br/>pos_node_ids, pos_neighbor_ids,<br/>fake_embeddings] --> D2[Dis Embedding Matrix<br/>2 × n_node × n_emb]
+        D2 --> D3[Split: Source & Target<br/>Embedding Spaces]
+        D3 --> D4[Lookup Real Node Embeddings]
+        D4 --> D5[Calculate Positive Score:<br/>Inner Product]
+        D5 --> D6[Pos Loss:<br/>Sigmoid Cross-Entropy<br/>labels=1]
+        
+        D2 --> D7[Process Fake Embeddings<br/>from Generator]
+        D7 --> D8[Calculate Negative Scores:<br/>4 combinations i,j ∈ 0,1]
+        D8 --> D9[Neg Loss 0: pos_node × fake_source]
+        D8 --> D10[Neg Loss 1: pos_node × fake_target]
+        D8 --> D11[Neg Loss 2: pos_neighbor × fake_source]
+        D8 --> D12[Neg Loss 3: pos_neighbor × fake_target]
+        
+        D6 --> D13[Total Dis Loss]
+        D9 --> D13
+        D10 --> D13
+        D11 --> D13
+        D12 --> D13
+        D13 --> D14[Weighted Sum with<br/>neg_weight coefficients]
+    end
+
+    subgraph "Training Loop"
+        M --> T1[For epoch in n_epoch]
+        T1 --> T2[D-Step: Train Discriminator<br/>d_epoch iterations]
+        
+        T2 --> T3[Shuffle Edge List]
+        T3 --> T4[For batch in d_batch_size]
+        T4 --> T5[Prepare Data for Discriminator]
+        
+        T5 --> T6[Get Positive Pairs:<br/>node, neighbor from edges]
+        T6 --> T7[Generate Fake Embeddings<br/>using Generator]
+        T7 --> T71[Generate for node:<br/>Gs→fake_source, Gt→fake_target]
+        T71 --> T72[Generate for neighbor:<br/>Gs→fake_source, Gt→fake_target]
+        T72 --> T8[Forward Pass through<br/>Discriminator]
+        
+        T8 --> T9[Calculate Discriminator Loss:<br/>pos_loss + 4×neg_loss]
+        T9 --> T10[Backprop & Update<br/>Discriminator Parameters]
+        T10 --> T11{More D batches?}
+        T11 -->|Yes| T4
+        T11 -->|No| T12[Evaluate Link Prediction]
+        
+        T12 --> T13[G-Step: Train Generator<br/>g_epoch iterations]
+        T13 --> T14[Shuffle Node List]
+        T14 --> T15[For batch in g_batch_size]
+        T15 --> T16[Prepare Data for Generator]
+        
+        T16 --> T17[Sample Noise from<br/>N0, σ²I]
+        T17 --> T18[Get Dis Embeddings<br/>for nodes]
+        T18 --> T19[Forward Pass through<br/>Generator]
+        
+        T19 --> T20[Calculate Generator Loss:<br/>Fool Discriminator + L2 Reg]
+        T20 --> T21[Backprop & Update<br/>Generator Parameters]
+        T21 --> T22{More G batches?}
+        T22 -->|Yes| T15
+        T22 -->|No| T23{Save Checkpoint?}
+        
+        T23 -->|Yes| T24[Save Model Checkpoint]
+        T23 -->|No| T25{More Epochs?}
+        T24 --> T26[Write Embeddings to File:<br/>gen.emb, dis_s.emb, dis_t.emb]
+        T26 --> T25
+        T25 -->|Yes| T1
+        T25 -->|No| T27[Training Complete]
+    end
+
+    subgraph "Evaluation: Link Prediction"
+        E1[Load Test Data with<br/>Positive & Negative Links] --> E2[Get Embeddings from<br/>Trained Discriminator]
+        E2 --> E3[For each test link u,v]
+        E3 --> E4[Calculate Score:<br/>inner product su · tv]
+        E4 --> E5[Predict: score > threshold]
+        E5 --> E6[Calculate AUC Scores:<br/>0%, 50%, 100% reversed edges]
+        E6 --> E7[Return Performance Metrics]
+    end
+
+    subgraph "Positive Link Reconstruction Eval"
+        R1[Load All Test Links] --> R2[Filter Positive Links]
+        R2 --> R3[Split: 70% known, 30% reconstruct]
+        R3 --> R4[For each source node]
+        R4 --> R5[Get Source Embedding su]
+        R5 --> R6[Calculate Similarity with<br/>All Target Embeddings tv]
+        R6 --> R7[Rank by Similarity Score]
+        R7 --> R8[Get Top-k Predictions]
+        R8 --> R9[Check if Actual Target<br/>in Top-k]
+        R9 --> R10[Calculate Metrics:<br/>Hits@k, Hits@1, MRR, Precision@k]
+        R10 --> R11{More Iterations?}
+        R11 -->|Yes| R3
+        R11 -->|No| R12[Aggregate Statistics<br/>across iterations]
+        R12 --> R13[Visualize Results]
+    end
+
+    subgraph "Key Mathematical Components"
+        M1[Generator Loss:<br/>LG = Σ log1-Dus,u + log1-Du,ut<br/>+ λL2node_emb + W]
+        M2[Discriminator Loss:<br/>LD = -Σlog Du,v<br/>- Σlog1-Dus,u + 1-Du,ut]
+        M3[Noise Distribution:<br/>z ~ Nzu, σ²I]
+        M4[Score Function:<br/>Du,v = σsu · tv]
+        M5[Two Embedding Spaces:<br/>Source: su ∈ Rd<br/>Target: tu ∈ Rd]
+    end
+
+    T27 --> E1
+    E7 --> R1
+    
+    style A fill:#e1f5e1
+    style T27 fill:#ffe1e1
+    style E7 fill:#e1e5ff
+    style R13 fill:#fff5e1
+    style G15 fill:#ffe5f0
+    style D14 fill:#f0e5ff
